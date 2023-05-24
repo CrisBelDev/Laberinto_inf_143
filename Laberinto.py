@@ -29,6 +29,9 @@ class Game_laberinto:
     
     def encontrar_caminos_recursiva(self, lab, i, j, camino_actual, caminos, memo):
         if 0 <= i < len(lab) and 0 <= j < len(lab[i]):
+            if len(caminos) > 10:
+                return
+
             if lab[i][j] == 2:
                 camino_actual.append((i, j))
                 caminos.append(camino_actual.copy())
@@ -48,7 +51,7 @@ class Game_laberinto:
                     lab[i][j] = 0  # desmarcado
                     memo[i][j] = caminos[len(caminos) - len(memo[i][j]):]
     
-    def main(self):
+"""    def main(self):
         obj = Game_laberinto()
         lab = [
             [0, 1, 0, 1, 1],
@@ -56,6 +59,19 @@ class Game_laberinto:
             [0, 1, 0, 0, 0],
             [0, 1, 0, 1, 0],
             [0, 0, 0, 0, 2]
+        ]
+        lab1 = [
+           
+            [0,0,1,0,0,0,0,0,1,0,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1],
+            [1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,1],
+            [1,0,0,0,1,0,1,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,1,0,1],
+            [1,0,1,1,1,0,0,0,0,0,1,0,0,0,0,1,0,1,1,1,1,1,0,1,0,1],
+            [1,0,0,0,1,0,0,1,1,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1],
+            [1,0,0,1,1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,0,1,1,0,1,0,1],
+            [1,0,0,1,0,0,0,0,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,0,0,1],
+            [1,0,0,1,0,1,1,1,1,0,0,0,1,0,0,1,1,1,1,0,1,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,0,2]
+
         ]
         res = obj.tiene_salida(lab)
         print("Tiene salida:", res)
@@ -69,3 +85,4 @@ class Game_laberinto:
 if __name__ == "__main__":
     obj = Game_laberinto()
     obj.main()
+"""
