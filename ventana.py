@@ -1,12 +1,13 @@
 import pygame
+
 import sys
 
-class Laberinto:
+class Ventana:
     def __init__(self, laberinto):
         self.laberinto = laberinto
         self.ancho = len(laberinto[0])
         self.alto = len(laberinto)
-        self.tamano_bloque = 50
+        self.tamano_bloque = 40
         self.ancho_ventana = self.ancho * self.tamano_bloque
         self.alto_ventana = self.alto * self.tamano_bloque
         self.posicion_jugador_x = 0
@@ -19,9 +20,16 @@ class Laberinto:
         for y in range(self.alto):
             for x in range(self.ancho):
                 if self.laberinto[y][x] == 1:
-                    pygame.draw.rect(self.pantalla, (0, 0, 0), (x * self.tamano_bloque, y * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
+                    pygame.draw.rect(self.pantalla, (0, 0, 0), (x * self.tamano_bloque , y * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
                 else:
                     pygame.draw.rect(self.pantalla, (255, 255, 255), (x * self.tamano_bloque, y * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
+        self.colorear_meta()
+    # funcion para colorear la meta
+    def colorear_meta(self):
+        for y in range(self.alto):
+            for x in range(self.ancho):
+                if self.laberinto[y][x] == 2:
+                    pygame.draw.rect(self.pantalla, (0, 255, 0), (x * self.tamano_bloque, y * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
 
     def dibujar_jugador(self):
         pygame.draw.rect(self.pantalla, (255, 0, 0), (self.posicion_jugador_x * self.tamano_bloque, self.posicion_jugador_y * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
@@ -29,7 +37,7 @@ class Laberinto:
     def mover_jugador(self, dx, dy):
         nueva_posicion_x = self.posicion_jugador_x + dx
         nueva_posicion_y = self.posicion_jugador_y + dy
-        if 0 <= nueva_posicion_x < self.ancho and 0 <= nueva_posicion_y < self.alto and self.laberinto[nueva_posicion_y][nueva_posicion_x] == 0:
+        if 0 <= nueva_posicion_x < self.ancho and 0 <= nueva_posicion_y < self.alto and self.laberinto[nueva_posicion_y][nueva_posicion_x] in [0,2]:
             self.posicion_jugador_x = nueva_posicion_x
             self.posicion_jugador_y = nueva_posicion_y
 
@@ -53,16 +61,19 @@ class Laberinto:
             self.dibujar_laberinto()
             self.dibujar_jugador()
             pygame.display.update()
+    # marcar soluciones
+    def marcar_soluciones(self):
+        return True
 
 
 # Ejemplo de uso
-laberinto = [
+"""laberinto = [
     [0, 1, 0, 1, 1],
     [0, 0, 0, 1, 0],
     [0, 1, 0, 0, 0],
     [0, 1, 0, 1, 0],
-    [0, 0, 0, 0, 0]
+    [0, 0, 0, 0, 2]
 ]
 
-juego = Laberinto(laberinto)
-juego.ejecutar_juego()
+juego = Ventana(laberinto)
+juego.ejecutar_juego()"""
