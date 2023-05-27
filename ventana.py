@@ -12,15 +12,23 @@ class Ventana:
         self.alto_ventana = self.alto * self.tamano_bloque
         self.posicion_jugador_x = 0
         self.posicion_jugador_y = 0
-
+        # reloj fps
+        self.clock = pygame.time.Clock()
+        self.speed_x = 0
+        self.speed_y = 0
         pygame.init()
         self.pantalla = pygame.display.set_mode((self.ancho_ventana, self.alto_ventana))
 
     def dibujar_laberinto(self):
+        image = pygame.image.load("media/pared.jpg")
+        imagen_redimensionada = pygame.transform.scale(image, (self.tamano_bloque, self.tamano_bloque))
+
         for y in range(self.alto):
             for x in range(self.ancho):
                 if self.laberinto[y][x] == 1:
-                    pygame.draw.rect(self.pantalla, (0, 0, 0), (x * self.tamano_bloque , y * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
+                    self.pantalla.blit(imagen_redimensionada, (x * self.tamano_bloque, y * self.tamano_bloque))
+
+                    #pygame.draw.rect(self.pantalla, (0, 0, 0), (x * self.tamano_bloque , y * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
                 else:
                     pygame.draw.rect(self.pantalla, (255, 255, 255), (x * self.tamano_bloque, y * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
         self.colorear_meta()
@@ -47,20 +55,35 @@ class Ventana:
                 if evento.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                elif evento.type == pygame.KEYDOWN:
+                if evento.type == pygame.KEYDOWN: # al presionar
                     if evento.key == pygame.K_UP:
-                        self.mover_jugador(0, -1)
+                        self.speed_y = -1 
+                        #self.mover_jugador(0, -1)
                     elif evento.key == pygame.K_DOWN:
-                        self.mover_jugador(0, 1)
+                        self.speed_y = 1 
+                        #self.mover_jugador(0, 1)
                     elif evento.key == pygame.K_LEFT:
-                        self.mover_jugador(-1, 0)
+                        self.speed_x = -1
+                        #self.mover_jugador(-1, 0)
                     elif evento.key == pygame.K_RIGHT:
-                        self.mover_jugador(1, 0)
-
+                        self.speed_x = 1
+                        #self.mover_jugador(1, 0)
+                if evento.type == pygame.KEYUP:      # dejo de presionar tecla
+                    if evento.key == pygame.K_LEFT:
+                        self.speed_x = 0
+                    if evento.key == pygame.K_RIGHT:
+                        self.speed_x = 0
+                    # eje Y ----------------------
+                    if evento.key == pygame.K_UP:
+                        self.speed_y = 0
+                    if evento.key == pygame.K_DOWN:
+                        self.speed_y = 0
+            self.mover_jugador(self.speed_x,self.speed_y)
             self.pantalla.fill((0, 0, 0))
             self.dibujar_laberinto()
             self.dibujar_jugador()
-            pygame.display.update()
+            pygame.display.flip()
+            self.clock.tick(12)
     # marcar soluciones
     def marcar_soluciones(self):
         return True
