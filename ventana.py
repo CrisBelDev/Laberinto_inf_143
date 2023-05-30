@@ -2,6 +2,8 @@ import pygame
 from Laberinto import Game_laberinto as game
 from boton import Boton
 import random
+from Dijkstra import Laberinto_Dijkstra
+
 import sys
 
 class Ventana:
@@ -20,7 +22,13 @@ class Ventana:
         self.speed_y = 0
         self.pasos = 0
         self.is_winner = False
+        self.rutas_laberinto = []
         pygame.init()
+        # algoritmo de dijtra 
+        self.laberinto_Dijstra = Laberinto_Dijkstra()
+        self.caminos_cortos= self.laberinto_Dijstra.encontrar_caminos(laberinto)
+        
+        #
         self.pantalla = pygame.display.set_mode((self.ancho_ventana, self.alto_ventana))
         
 
@@ -69,6 +77,8 @@ class Ventana:
 
     def ejecutar_juego(self):
         sw = False
+        self.rutas_laberinto = self.marcar_soluciones()
+        
         while True:
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
@@ -101,47 +111,80 @@ class Ventana:
                     if evento.key == pygame.K_DOWN:
                         self.speed_y = 0
             
-            self.mover_jugador(self.speed_x,self.speed_y)
-            
-                
             self.dibujar_laberinto()
-            self.dibujar_jugador()
-
-            
-            
-            
-
-            # barra de informacion
-            pygame.draw.rect(self.pantalla, (67, 92, 98, 1), (0 , self.alto * self.tamano_bloque, self.ancho_ventana, 150))
-
-            fuente = pygame.font.Font(None, 50)
-            texto_superficie = fuente.render(f"pasos : {self.pasos}", True, (255,255,255))
-            rect_texto = texto_superficie.get_rect()
-            rect_texto.center = (100, self.alto * self.tamano_bloque+20)
-            self.pantalla.blit(texto_superficie, rect_texto)
 
             if self.is_winner:
-                print("gas ganado..!!!!!")
-                
+                #print("gas ganado..!!!!!")
+                #pygame.display.flip()
 
                 fuente = pygame.font.Font(None, 36)
-                obj_boton = Boton(24,self.alto * self.tamano_bloque + 45,160,50,(2,255,25),(0,0,0),"ver nueva sol",fuente)
+                obj_boton = Boton(24,self.alto * self.tamano_bloque + 45,100,50,(2,255,25),(0,0,0),"opc 1",fuente)
                 obj_boton.actualizar()
                 obj_boton.dibujar()
+
+                # otro boton
+                obj_boton1 = Boton(24+100,self.alto * self.tamano_bloque + 45,100,50,(2,255,25),(0,0,0),"opc 2",fuente)
+                obj_boton1.actualizar()
+                obj_boton1.dibujar()
                 if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                     if obj_boton.rect.collidepoint(evento.pos):
-                        print("Haz clic en el botón")
-                        lista_caminos = self.marcar_soluciones()
+                        print("botón 1")
+                        contador = 0
+                        camino_a_elegir = random.randint(0, len(self.rutas_laberinto)-1)
+                        for dx, dy in self.rutas_laberinto[camino_a_elegir]:
+                            
+                            pygame.draw.rect(self.pantalla, (0,0,0,1), (dy * self.tamano_bloque, dx * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
+                            
+                            fuente = pygame.font.Font(None, 20)
+                            texto_superficie = fuente.render(f"{contador}", True, (255,255,255)) # contador de pasos
+                            contador += 1
+                            rect_texto = texto_superficie.get_rect()
+                            rect_texto.center = (dy * self.tamano_bloque+20, dx * self.tamano_bloque+20)
+                            self.pantalla.blit(texto_superficie, rect_texto)
 
+                            pygame.display.flip()
+                    if obj_boton1.rect.collidepoint(evento.pos):
+                        print("botón 2")
+                        contador = 0
+                        camino_a_elegir = random.randint(0, len(self.caminos_cortos)-1)
+                        for dx, dy in self.caminos_cortos[camino_a_elegir]:
+                            
+                            pygame.draw.rect(self.pantalla, (0,0,0,1), (dy * self.tamano_bloque, dx * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
+                            
+                            fuente = pygame.font.Font(None, 20)
+                            texto_superficie = fuente.render(f"{contador}", True, (255,255,255)) # contador de pasos
+                            contador += 1
+                            rect_texto = texto_superficie.get_rect()
+                            rect_texto.center = (dy * self.tamano_bloque+20, dx * self.tamano_bloque+20)
+                            self.pantalla.blit(texto_superficie, rect_texto)
+
+                            pygame.display.flip()
+                        
+                    
+            else:
             # --------------------------------------------------
-            pygame.display.flip()
+                self.mover_jugador(self.speed_x,self.speed_y)
+                
+                self.dibujar_jugador()
+                # barra de informacion
+                pygame.draw.rect(self.pantalla, (67, 92, 98, 1), (0 , self.alto * self.tamano_bloque, self.ancho_ventana, 150))
+
+                fuente = pygame.font.Font(None, 50)
+                texto_superficie = fuente.render(f"pasos : {self.pasos}", True, (255,255,255))
+                rect_texto = texto_superficie.get_rect()
+                rect_texto.center = (100, self.alto * self.tamano_bloque+20)
+                self.pantalla.blit(texto_superficie, rect_texto)
+                if self.is_winner:
+                    fuente = pygame.font.Font(None, 36)
+                    obj_boton = Boton(24,self.alto * self.tamano_bloque + 45,160,50,(2,255,25),(0,0,0),"opc",fuente)
+                    obj_boton.actualizar()
+                    obj_boton.dibujar()
+                pygame.display.flip()
             self.clock.tick(10)
         
     # marcar soluciones
     def marcar_soluciones(self,):
         obj = game()
-        menor = 999999
-        camino_menor = []
         """res = obj.tiene_salida(self.laberinto)
         print("Tiene salida:", res)"""
         caminos = obj.encontrar_caminos(self.laberinto)
@@ -152,29 +195,5 @@ class Ventana:
         
 
         print("menor: ",len(camino_menor), ": ", camino_menor)"""
-        contador = 0
-        camino_a_elegir = random.randint(0, len(caminos)-1)
-        for dx, dy in caminos[camino_a_elegir]:
-            
-            pygame.draw.rect(self.pantalla, (0,0,0,1), (dy * self.tamano_bloque, dx * self.tamano_bloque, self.tamano_bloque, self.tamano_bloque))
-            
-            fuente = pygame.font.Font(None, 20)
-            texto_superficie = fuente.render(f"{contador}", True, (255,255,255)) # contador de pasos
-            contador += 1
-            rect_texto = texto_superficie.get_rect()
-            rect_texto.center = (dy * self.tamano_bloque+20, dx * self.tamano_bloque+20)
-            self.pantalla.blit(texto_superficie, rect_texto)
+        
         return caminos
-
-
-# Ejemplo de uso
-"""laberinto = [
-    [0, 1, 0, 1, 1],
-    [0, 0, 0, 1, 0],
-    [0, 1, 0, 0, 0],
-    [0, 1, 0, 1, 0],
-    [0, 0, 0, 0, 2]
-]
-
-juego = Ventana(laberinto)
-juego.ejecutar_juego()"""

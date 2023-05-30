@@ -1,6 +1,6 @@
 import heapq
 
-class Laberinto:
+class Laberinto_Dijkstra:
     def encontrar_caminos(self, lab):
         # Convertir el laberinto en un grafo ponderado
         grafo = self.crear_grafo(lab)
@@ -99,8 +99,9 @@ class Laberinto:
 
         return vecinos
 
+"""
 # Crear una instancia de la clase Laberinto
-laberinto = Laberinto()
+laberinto = Laberinto_Dijkstra()
 
 # Definir el laberinto como una matriz bidimensional
 lab = [
@@ -137,3 +138,4 @@ for camino in caminos:
     print(contador," tamño:",len(camino)-1,":",camino)
     contador += 1
     print()
+"""

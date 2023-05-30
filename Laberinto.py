@@ -25,11 +25,12 @@ class Game_laberinto:
         memo = [[[] for _ in range(len(lab[0]))] for _ in range(len(lab))]
         caminos = []
         self.encontrar_caminos_recursiva(lab, 0, 0, [], caminos, memo)
+        caminos.sort(key=len)  # Ordenar los caminos de menor a mayor
         return caminos
     
     def encontrar_caminos_recursiva(self, lab, i, j, camino_actual, caminos, memo):
         if 0 <= i < len(lab) and 0 <= j < len(lab[i]):
-            if len(caminos) > 10:
+            if len(caminos) > 100:
                 return
 
             if lab[i][j] == 2:
