@@ -11,7 +11,7 @@ Se utilizo Python en su version 3.10 para este proyecto, pero funcionara con ver
 pip install pygame
 ```
 
-Otra forma de instalar las dependencias:
+Otra forma de instalar las dependencias: Utilize el archivo "requirements.txt" y despues use el comando:
 
 ```bash
 pip install -r requirements.txt
