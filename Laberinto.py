@@ -30,7 +30,7 @@ class Game_laberinto:
     
     def encontrar_caminos_recursiva(self, lab, i, j, camino_actual, caminos, memo):
         if 0 <= i < len(lab) and 0 <= j < len(lab[i]):
-            if len(caminos) > 100:
+            if len(caminos) > 400: # numero de caminos a mostrar
                 return
 
             if lab[i][j] == 2:
