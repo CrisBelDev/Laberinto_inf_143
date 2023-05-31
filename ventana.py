@@ -26,6 +26,19 @@ class Ventana:
         pygame.init()
         # algoritmo de dijtra 
         self.laberinto_Dijstra = Laberinto_Dijkstra()
+        filas = len(laberinto)
+        columnas = len(laberinto[0])
+        meta = None
+        for i in range(filas):
+            for j in range(columnas):
+                if laberinto[i][j] == 2:
+                    meta = (i, j)
+                    break
+            if meta is not None:
+                break
+
+        self.laberinto_Dijstra.meta = meta
+
         self.caminos_cortos= self.laberinto_Dijstra.encontrar_caminos(laberinto)
         
         #

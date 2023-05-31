@@ -4,6 +4,7 @@ class Game_laberinto:
         return self.tiene_salida_recursiva(lab, 0, 0, memo)
     
     def tiene_salida_recursiva(self, lab, i, j, memo):
+        print(memo)
         if 0 <= i < len(lab) and 0 <= j < len(lab[i]):
             if lab[i][j] == 2:
                 return True
@@ -52,7 +53,7 @@ class Game_laberinto:
                     lab[i][j] = 0  # desmarcado
                     memo[i][j] = caminos[len(caminos) - len(memo[i][j]):]
     
-"""    def main(self):
+"""  def main(self):
         obj = Game_laberinto()
         lab = [
             [0, 1, 0, 1, 1],

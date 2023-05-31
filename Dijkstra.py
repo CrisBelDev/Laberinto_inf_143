@@ -18,7 +18,7 @@ class Laberinto_Dijkstra:
             if distancia_actual > distancias[nodo_actual]:
                 continue
 
-            if nodo_actual == (len(lab)-1, len(lab[0])-1):
+            if nodo_actual == self.meta:
                 break
 
             for vecino, peso in grafo[nodo_actual]:
@@ -52,18 +52,17 @@ class Laberinto_Dijkstra:
                         vecinos.append(((i, j+1), 1))
 
                     grafo[nodo_actual] = vecinos
-
+        
         return grafo
 
     def obtener_caminos_menores(self, distancias, lab):
         filas = len(lab)
         columnas = len(lab[0])
-        meta = (filas-1, columnas-1)
-        menor_distancia = distancias.get(meta, float('inf'))
+        menor_distancia = distancias.get(self.meta, float('inf'))
 
         caminos = []
         if menor_distancia < float('inf'):
-            self.dfs_obtener_caminos(meta, lab, [], caminos, distancias, menor_distancia)
+            self.dfs_obtener_caminos(self.meta, lab, [], caminos, distancias, menor_distancia)
 
         return caminos
 
@@ -112,30 +111,27 @@ lab = [
     [0, 0, 0, 0, 2]
 ]
 
-lab1 = [
-[0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,1,1,1,1,0,1,0,1,0,1],
-[1,1,1,1,1,0,1,0,1,0,0,0,1,0,0,1,0,0,0,0,0,1,0,1,1,1],
-[1,0,0,0,0,0,0,0,1,0,1,1,1,0,0,1,0,1,1,1,1,1,0,1,0,1],
-[1,0,1,0,1,1,1,1,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1],
-[1,0,1,0,0,0,0,0,1,0,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1],
-[1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,1],
-[1,0,0,0,1,0,1,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,1,0,1],
-[1,0,1,1,1,0,0,0,0,0,1,0,0,0,0,1,0,1,1,1,1,1,0,1,0,1],
-[1,0,0,0,1,0,1,1,1,0,1,0,1,0,0,1,0,0,1,0,0,1,0,1,0,1],
-[1,0,0,1,1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,0,1,1,0,1,0,1],
-[1,0,0,1,0,0,0,0,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,0,0,1],
-[1,0,0,1,0,1,1,1,1,0,0,0,1,0,0,1,1,1,1,0,1,0,1,0,0,1],
-[1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,0,0,2]
+# Obtener la posición de la meta en el laberinto
+filas = len(lab)
+columnas = len(lab[0])
+meta = None
+for i in range(filas):
+    for j in range(columnas):
+        if lab[i][j] == 2:
+            meta = (i, j)
+            break
+    if meta is not None:
+        break
 
-]
+laberinto.meta = meta
+
 # Llamar a la función encontrar_caminos de la instancia laberinto
 caminos = laberinto.encontrar_caminos(lab)
 
 # Imprimir los caminos encontrados
 contador = 1
 for camino in caminos:
-    print(contador," tamño:",len(camino)-1,":",camino)
+    print(contador, "tamaño:", len(camino) - 1, ":", camino)
     contador += 1
     print()
 """
